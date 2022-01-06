@@ -26,6 +26,8 @@
 
 2. 类型别名
 
+    优点：可以为任意类型指定别名
+
     ```typescript
     // 当 某个类型 在多处地方被使用，则需要被重复声明，这样显然是不合理的，这就需要给此类型起一个别名
     // 语法： type 类型别名 = 类型
@@ -70,4 +72,51 @@
     function mySlice(start?: number, end?: number): void {
       console.log('起始索引:', start, '结束索引:', end)
     }
+    ```
+
+4. 对象类型
+
+    4.1 基本写法
+
+    ```typescript
+    let person: {name: string; age: number; sayHi(word: string): void} = {
+      name: 'jack',
+      age: 19,
+      sayHi(word) {}
+    }
+    ```
+
+    4.2 可选属性
+
+    ```typescript
+    // 例如 axios 的 method 属性默认是 GET 请求，所以发送 GET 请求时，method 属性非必要填写
+    function myAxios(config: {url: string; method?: string}) {
+      console.log(config)
+    }
+    ```
+
+5. 接口类型
+
+    只能为对象指定类型
+
+    5.1 基本语法
+
+    ```typescript
+    // 当一个对象类型被多次使用时，通过接口（interface）来复用
+    interface IPerson {
+      name: string
+      age: number
+      sayHi(): void
+    }
+
+    let person: IPerson = {
+      name: 'jack',
+      age: 19,
+      sayHi() {}
+    }
+    ```
+
+    5.2 接口继承
+    ```typescript
+    
     ```
