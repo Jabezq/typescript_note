@@ -13,6 +13,11 @@
     npm i -g ts-node // 安装
     ts-node 文件名字 // 编译、执行一步到位
     ```
+
+3. 处理报错
+
+    当运行 tsc-node 报错时，需要有 tsconfig.json 配置文件，命令：tsc -init
+
 ### TypeScript 常用类型
 
 1. 数组类型
@@ -118,5 +123,127 @@
 
     5.2 接口继承
     ```typescript
+    interface Point2D {x: number; y: number}
+    interface Point3D {x: number; y: number; z: number}
+
+    // Point3D 和 Point2D 有共用的属性或者方法，使用继承达到复用的目的
+    interface Point2D {x: number; y: number}
+    interface Point3D extends Point2D {z: number}
+    ```
+
+6. 元组类型
+
+    元组类型是另一种类型的数组，它确切地知道包含多少个元素，以及特定索引对应的类型
+
+    ```typescript
+    // 场景：坐标轴是由两个数值组成的，如果使用数组则显得不够严谨，而元组类型能够指定含有多少个元素和每个元素的类型
+    let position: [number, number] = [39.5427, 116.2317]
+    ```
+
+7. 类型断言
+
+    ```typescript
+    // 更明确地指定某类型时候，就可以使用类型断言
+    // 例如下面获取 a 链接标签元素使用了类型断言
+    const aLink = getElementById('link') as HTMLAnchorElement
+
+    // 在属性列表最后能够查看此元素是 HTMLElement 的哪个子类型
+    console.dir($0) // $0 代表选择的元素
+    ```
+
+8. 字面量类型
+
+    数组类型的严谨方式是元组类型，而字面量类型也可以弥补其他类型不够严谨的缺陷
+    使用模式：字面量类型配合联合类型一起使用
+    使用场景：用来表示一组明确的可选值列表
+
+    ```typescript
+    // 场景：游戏控制中分 上、下、左、右四个方向其中一个
+    // 参数 direction 只能是四个中其中一个，相对于 string 类型更加严谨
+    function changeDirection(direction: 'up' | 'down' | 'left' |'right') {
+      console.log(direction)
+    }
+    ```
+
+9. 枚举类型
+
+    枚举的功能类似于 字面量类型 + 联合类型，用来表示一组明确的可选值
+
+    注意：枚举成员是有值的，默认为从0开始自增的数值，也可以给枚举中的成员初始化值。枚举与其他类型不同，会被编译成 js 代码，而其他类型在被编译成 js 代码时，会去除类型的名字。
+    ![](https://img-blog.csdnimg.cn/9e7a5140daa94447a851a14f2e961c55.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBASmFiZXpx,size_20,color_FFFFFF,t_70,g_se,x_16)
     
+    数字枚举：枚举成员的值为数字
+
+    字符串枚举：枚举成员的值为字符串
+
+    ```typescript
+    // 定义一组命名常量，描述一个值且是这些命名常量中的其中一个
+    enum Direction {Up, Down, Left, Right}
+
+    function changeDirection(direction: Direction) {
+      console.log(direction)
+    }
+
+    // 如何访问枚举成员？
+    // 类似 js 中的对象，通过 (.)
+    changeDirection(Direction.Up)
+    ```
+
+10. typeof 操作符
+
+    在 **类型上下文** (冒号后面，既加 类型注解 的位置)中引用变量或属性的类型
+
+    使用场景：根据已有变量的值，获取该值的类型来简化类型书写
+
+    ```typescript
+    let p = {x: 1, y: 2}
+
+    function formatPoint(point: {x: number; y: number}) {}
+
+    // 利用 typeof 操作符简化如下
+    function formatPointe(point: typeof p) {}
+    ```
+### TypeScript 高级类型
+
+1. 类成员的可见性修饰符
+
+    ```typescript
+    // 1. public: 表示公有的
+
+    // 2. protected: 仅对其声明所在类和子类中可见，无论对当前类还是子类的实例化对象都不可见
+    class Animal {
+      protected move() { console.log('Moving along!') }
+    }
+
+    const animal = new Animal() // 无法访问
+
+    class Dog extends Animal {
+      bark() {
+        console.log('汪!')
+        this.move() // 可以调用
+      }
+    }
+
+    const dog = new Dog() // 无法访问
+
+    // 3. private: 只在当前类中可见，对实例对象以及子类也是不可见的
+    ```
+
+2. 泛型
+
+    泛型就是为了让函数更强大，让它适用于多种数据类型，例如一个函数的功能是输入什么就输出什么，包括了数值、字符串等类型，但为了不使用 any 类型来注释，于是出现了泛型。
+
+    2.1 创建泛型
+    
+    ```typescript
+    function id<Type>(value: Type): Type {return value}
+
+    // 解释：此处的 Type 叫做 类型变量，专门 捕获、处理 类型，因为 Type 是类型，所以将其作为函数参数和返回值的类型，就实现了输入什么类型就输出什么类型的目的
+
+    // 如何调用？
+    // 下行代码代表以 number 类型调用泛型函数，也可以利用 TypeScript 的类型推断机制不指定类型
+    id<number>(10)
+    
+    // 简化
+    id(10)
     ```
