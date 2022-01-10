@@ -142,6 +142,8 @@
 
 7. 类型断言
 
+    用来手动指定一个值的类型，即允许变量从一种类型更改为另一种类型
+
     ```typescript
     // 更明确地指定某类型时候，就可以使用类型断言
     // 例如下面获取 a 链接标签元素使用了类型断言
@@ -172,7 +174,7 @@
     注意：枚举成员是有值的，默认为从0开始自增的数值，也可以给枚举中的成员初始化值。枚举与其他类型不同，会被编译成 js 代码，而其他类型在被编译成 js 代码时，会去除类型的名字。
     ![](https://img-blog.csdnimg.cn/9e7a5140daa94447a851a14f2e961c55.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBASmFiZXpx,size_20,color_FFFFFF,t_70,g_se,x_16)
     
-    数字枚举：枚举成员的值为数字
+    数字枚举：枚举成员的值为数字，注意，如果某个属性的值是计算出来的，那么它后面的一位成员必须要初始化值
 
     字符串枚举：枚举成员的值为字符串
 
@@ -189,7 +191,24 @@
     changeDirection(Direction.Up)
     ```
 
-10. typeof 操作符
+10. never 类型
+
+    代表从不会出现的值，也就是声明为 never 类型的变量只能被 never 类型所赋值，在函数中它通常表现为抛出异常。
+    注意：never 类型是其他类型的子类型。下面代码中 y 变量可以体现这点。
+    ```typescript
+    let x: never
+    let y: number
+    x = (() => { throw new Error('exception') })()
+    // never 类型可以赋值给 任何 类型
+    y = (() => { throw new Error('exception') })()
+
+    // 返回值为 never 的函数可以是抛出异常的情况
+    function error(message: string): never {
+        throw new Error(message);
+    }
+    ```
+
+11. typeof 操作符
 
     在 **类型上下文** (冒号后面，既加 类型注解 的位置)中引用变量或属性的类型
 
