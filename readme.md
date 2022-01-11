@@ -72,11 +72,29 @@
     }
     ```
     3.3 可选参数
+
     ```typescript
     // 注意：可选参数只能出现在参数列表的最后
     function mySlice(start?: number, end?: number): void {
       console.log('起始索引:', start, '结束索引:', end)
     }
+    ```
+    3.4 重载
+
+    重载是方法名字相同，而参数不同，返回类型可以相同也可以不同
+
+    ```typescript
+    // 每个重载的方法（或者构造函数）都必须有一个独一无二的参数类型列表
+    // 重点在于 参数
+    function disp(s1:string):void; 
+    function disp(n1:number,s1:string):void; 
+    
+    function disp(x:any,y?:any):void { 
+        console.log(x); 
+        console.log(y); 
+    } 
+    disp("abc") 
+    disp(1,"xyz");
     ```
 
 4. 对象类型
